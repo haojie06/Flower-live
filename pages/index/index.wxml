@@ -1,14 +1,24 @@
-<!--pages/index/index.wxml-->
 <view class="show">
-  <view class="showMsg">
-    <block>
-      <view class="title">花盆{{id}}</view>
-      <view class="showItem" id="temper">大气温度：{{msg.temper}}</view>
-      <view class="showItem" id="airHumidity">大气湿度：{{msg.airHumidity}}</view>
-      <view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}</view>
-      <view class="showItem" id="light">光照强度：{{msg.light}}</view>
-    </block>
-  </view>
+		<view class="showMsg">
+				<block>
+						<view class="title">花盆{{id}}</view>
+						<view class="showItem" id="temper">大气温度：{{msg.temper}}</view>
+						<view class="line"></view>
+						<view class="showItem" id="airHumidity">大气湿度：{{msg.airHumidity}}</view>
+						<view class="line"></view>
+						<view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}</view>
+						<view class="line"></view>
+						<view class="showItem" id="light">光照强度：{{msg.light}}</view>
+				</block>
+		</view>
+		<scroll-view class="flower-list" scroll-y="true" scroll-with-animation="true" enable-back-to-top="true">
+				<view class="list-item" hover-class="none" hover-stop-propagation="false" wx:for="{{flower_pots}}" wx:for-item="pot" wx:for-index="index">
+						<view class="weui-media-box weui-media-box_text">
+								<view class="weui-media-box__title weui-media-box__title_in-text">
+										{{pot.id}}.{{pot.name}}
+								</view>
+								<view class="weui-media-box__desc">{{pot.desc}}</view>
+						</view>
+				</view>
+		</scroll-view>
 </view>
-
-
