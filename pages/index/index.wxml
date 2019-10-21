@@ -1,13 +1,14 @@
-<!--index.wxml-->
-<view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+<!--pages/index/index.wxml-->
+<view class="show">
+  <view class="showMsg">
+    <block>
+      <view class="title">花盆{{id}}</view>
+      <view class="showItem" id="temper">大气温度：{{msg.temper}}</view>
+      <view class="showItem" id="airHumidity">大气湿度：{{msg.airHumidity}}</view>
+      <view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}</view>
+      <view class="showItem" id="light">光照强度：{{msg.light}}</view>
     </block>
   </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
 </view>
+
+
