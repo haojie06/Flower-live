@@ -54,7 +54,15 @@ Page({
 	/**
    * 生命周期函数--监听页面加载
    */
-	onLoad: function(options) {},
+	onLoad: function(options) {
+		let pots = wx.getStorageSync('pots');
+		if (pots.length == 0) {
+		} else {
+			this.setData({
+				flower_pots: pots
+			});
+		}
+	},
 
 	/**
    * 生命周期函数--监听页面初次渲染完成
@@ -81,7 +89,12 @@ Page({
 	/**
    * 生命周期函数--监听页面卸载
    */
-	onUnload: function() {},
+	onUnload: function() {
+		wx.setStorageSync({
+			key: 'pots',
+			data: this.data.flower_pots
+		});
+	},
 
 	/**
    * 页面相关事件处理函数--监听用户下拉动作

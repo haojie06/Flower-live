@@ -34,6 +34,7 @@
 		 wx:for="{{flower_pots}}"
 		 wx:for-item="pot"
 		 wx:for-index="index"
+		 wx:key="{{pot.id}}"
 		 data-pot="{{pot}}"
 		 bind:tap="touchListItem"
 		>
