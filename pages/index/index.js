@@ -156,7 +156,7 @@ Page({
 		let pots = this.data.flower_pots;
 		let duplicate = false;
 		for (let p of pots) {
-			if (p.id == e.detail.value.potId) {
+			if (p.id === e.detail.value.potId) {
 				duplicate = true;
 				break;
 			}
@@ -170,11 +170,12 @@ Page({
 				duration: 1500,
 				mask: false
 			});
-		} else {
+		}
+    else {
 			let newPot = {
-				name: e.detail.value.potName,
-				id: e.detail.value.potId,
-				desc: e.detail.value.potDesc
+				name: e.detail.value.potName || "test",
+        id: e.detail.value.potId || (pots[pots.length - 1].id + 1),
+				desc: e.detail.value.potDesc || "描述"
 			};
 			pots.push(newPot);
 		}
