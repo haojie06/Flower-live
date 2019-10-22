@@ -43,7 +43,7 @@ page
 
 .list-container {
   width: 100%;
-  height: 90%;
+  height: 100%;
 }
 
 .line {
@@ -62,7 +62,7 @@ page
   border-top-color: gray;
   border-top-width: 2px;
   border-top-style: dotted;
-  height: 45%;
+  height: 50%;
   width: 92%;
 }
 
@@ -85,4 +85,44 @@ page
 
 .line-font {
   display: inline-block;
+}
+
+.mask {
+  width: 100%;  
+  height: 100%;  
+  position: fixed;  
+  top: 0;  
+  left: 0;  
+  z-index: 1000;  
+  background: #000;  
+  opacity: 0.5;  
+  overflow: hidden;  
+}
+
+.potModal {
+  position: fixed;
+  border-radius: 20px;
+  width: 80%;
+  z-index: 1001;
+  top: 20%;
+  right: 10%;
+  height: 60%;
+  margin-left: 50%;
+  background-color: white;
+}
+
+.modal-title {
+  font-weight: bold;
+  font-size: 1.25em;
+}
+
+.modal-buttons {
+  position: absolute;
+  bottom: 2px;
+  width: 100%;
+  text-align: center;
+}
+
+.mini-btn {
+  margin: auto 5px;
 }
