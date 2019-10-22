@@ -1,7 +1,10 @@
 /* pages/index/index.wxss */
 @import "/pages/weui.wxss";
+@import "/pages/iconfont.wxss";
+
 page
 {
+  position: absolute;
   background-color: #f4f4f4f4;
   height: 100%;
   width: 100%;
@@ -17,21 +20,25 @@ page
 
 .title
 {
+  text-align: center;
   font-weight: bold;
   margin-bottom: 10rpx;
+  border-bottom: 1px gray dotted;
 }
 
 .showMsg
 {
+
   padding: 10rpx 20rpx;
-  align-content: center;
+  align-content: left;
   width: 92%;
-  text-align: center;
+  text-align: left;
 }
 .showItem
 {
   padding: 10px;
   align-content: center;
+  display: inline-block;
 }
 
 .list-container {
@@ -40,25 +47,42 @@ page
 }
 
 .line {
-  width: 50%;
+  width: 40%;
   height: 3px;
   border-top: 3px gray dotted;
   position: relative;
-  margin: 0px auto;
+  margin: 0px auto auto 3px;
 }
 
 .flower-list
 {
   margin: 0, auto;
   position: relative;
-  margin: 10px auto;
+  margin: 5px auto;
   border-top-color: gray;
   border-top-width: 2px;
   border-top-style: dotted;
-  height: 50%;
+  height: 45%;
   width: 92%;
 }
 
 .weui-media-box {
   text-align: left;
+  border-bottom: 0.5px gray solid;
+}
+
+.add-pot {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  border-radius: 200px;
+  bottom: 10px;
+  right: 5px;
+  background: none;
+  text-align: right;
+  font-size: 2.8em;
+}
+
+.line-font {
+  display: inline-block;
 }

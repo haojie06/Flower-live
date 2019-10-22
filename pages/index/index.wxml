@@ -1,15 +1,25 @@
 <view class="show">
 		<view class="showMsg">
-				<block>
-						<view class="title">花盆{{id}}</view>
-						<view class="showItem" id="temper">大气温度：{{msg.temper}}</view>
-						<view class="line"></view>
-						<view class="showItem" id="airHumidity">大气湿度：{{msg.airHumidity}}</view>
-						<view class="line"></view>
-						<view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}</view>
-						<view class="line"></view>
-						<view class="showItem" id="light">光照强度：{{msg.light}}</view>
-				</block>
+				<view class="title">花盆{{id}}</view>
+				<view >
+					<view class="line-font iconfont icon-wendu"/>
+					<view class="showItem" id="temper">大气温度：{{msg.temper}}</view>
+				</view>
+				<view class="line"></view>
+				<view>
+					<view class="line-font iconfont icon-IOTtubiao_huabanfuben"/>
+					<view class="showItem" id="airHumidity">大气湿度：{{msg.airHumidity}}</view>
+				</view>
+				<view class="line"></view>
+				<view>
+					<view class="line-font iconfont icon-taiyang"/>
+					<view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}</view>
+				</view>
+				<view class="line"></view>
+				<view >
+					<view class="line-font iconfont icon-taiyang1"/>
+					<view class="showItem" id="light">光照强度：{{msg.light}}</view>
+				</view>
 		</view>
 		<scroll-view class="flower-list" scroll-y="true" scroll-with-animation="true" enable-back-to-top="true">
 				<view class="list-item" hover-class="none" hover-stop-propagation="false" wx:for="{{flower_pots}}" wx:for-item="pot" wx:for-index="index">
@@ -21,4 +31,6 @@
 						</view>
 				</view>
 		</scroll-view>
+		<button class="add-pot iconfont icon-huapen">
+		</button>
 </view>
