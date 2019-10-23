@@ -1,4 +1,6 @@
 // pages/index/index.js
+var time = 0;
+
 Page({
 	/**
    * 页面的初始数据
@@ -12,21 +14,21 @@ Page({
 		msg: {
 			id: 1,
 			name: 'test',
-			temper: '0℃',
-			airHumidity: '0%',
-			soilHumidity: '0%',
+			temper: '0',
+			airHumidity: '0',
+			soilHumidity: '0',
 			light: '0'
 		},
 		flower_pots: [
 			{
 				id: 1,
-				name: 'test',
-				desc: '描述'
+				name: '郁金香',
+				desc: '湿度不小于XXX，光照时间不小于XXX'
 			},
 			{
 				id: 2,
-				name: 'test2',
-				desc: '描述'
+				name: '玫瑰',
+        desc: '温度范围~，湿度不小于XXX，光照时间不小于XXX'
 			},
 			{
 				id: 3,
@@ -111,24 +113,80 @@ Page({
    */
 	onShareAppMessage: function() {},
 
+  touchStart:function(e)
+  {
+    time = e.timeStamp;
+  },
+
 	//点击花盆列表中的元素
 	touchListItem: function(p) {
-		console.log(p.currentTarget.dataset.pot);
-		let pot = p.currentTarget.dataset.pot;
-		//发送请求，更新数据
-		wx.showToast({
-			title: '数据更新中',
-			icon: 'loading',
-			duration: 1200
-		});
+  if(time - p.timeStamp < 350)  //判断是否为短碰
+    {
+      console.log(p.currentTarget.dataset.pot);
+      let pot = p.currentTarget.dataset.pot;
+      //发送请求，更新数据
+      wx.showToast({
+        title: '数据更新中',
+        icon: 'loading',
+        duration: 1200
+      });
 
-		this.setData({
-			msg: {
-				name: pot.name,
-				id: pot.id
-			}
-		});
+      this.setData({
+        msg: {
+          name: pot.name,
+          id: pot.id
+        }
+      });
+    }
 	},
+
+  touchDelete:function(p)
+  {
+    var that = this;
+    let deleteId = p.currentTarget.dataset.pot.id;
+    let pot = p.currentTarget.dataset.pot;
+    let pots = this.data.flower_pots;
+
+    if(deleteId >= 1 && deleteId <= 6)   //1-6花盆无法删除
+      {
+        wx.showToast({
+          title: '无法删除前六个',
+          icon: 'error',
+          image: "/images/error.png",
+          duration: 1200
+        })
+        return;
+      }
+    wx.showModal({
+      title: '删除',
+      content: '是否要删除id: ' + deleteId + '的花盆',
+      success: function(res)
+      {
+        if(res.confirm)
+        {
+          pots = pots.filter(
+            x => {return x.id != deleteId;}
+          )
+          that.setData(
+            {flower_pots: pots,
+            msg:{id: pots[0].id, name: pots[0].name}
+            });
+          wx.showToast({
+            title: '删除成功',
+            icon: "success"
+          })
+        }
+      },
+      fail: function()
+      {
+        wx.showToast({
+          title: '删除失败',
+          icon: 'error',
+          image: "/images/error.png"
+        })
+      }
+    })
+  },
 
 	addPot: function() {
 		this.setData({
@@ -138,7 +196,8 @@ Page({
 
 	modalCancel: function() {
 		this.setData({
-			showModal: false
+			showModal: false,
+      curDescCount: 0
 		});
 	},
 	descInput: function(data) {
@@ -156,7 +215,7 @@ Page({
 		let pots = this.data.flower_pots;
 		let duplicate = false;
 		for (let p of pots) {
-			if (p.id === e.detail.value.potId) {
+			if (p.id == e.detail.value.potId) {
 				duplicate = true;
 				break;
 			}
@@ -174,7 +233,7 @@ Page({
     else {
 			let newPot = {
 				name: e.detail.value.potName || "test",
-        id: e.detail.value.potId || (pots[pots.length - 1].id + 1),
+        id: e.detail.value.potId || (pots[pots.length - 1].id * 1 + 1),
 				desc: e.detail.value.potDesc || "描述"
 			};
 			pots.push(newPot);
@@ -182,7 +241,8 @@ Page({
 
 		this.setData({
 			flower_pots: pots,
-			showModal: false
+			showModal: false,
+      curDescCount: 0
 		});
 	}
 });

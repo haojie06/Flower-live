@@ -3,17 +3,17 @@
 		<view class="title">花盆:{{msg.name}} id: {{msg.id}}</view>
 		<view>
 			<view class="line-font iconfont icon-wendu" />
-			<view class="showItem" id="temper">大气温度：{{msg.temper}}</view>
+			<view class="showItem" id="temper">大气温度：{{msg.temper}}℃</view>
 		</view>
 		<view class="line" />
 		<view>
 			<view class="line-font iconfont icon-IOTtubiao_huabanfuben" />
-			<view class="showItem" id="airHumidity">大气湿度：{{msg.airHumidity}}</view>
+			<view class="showItem" id="airHumidity">大气湿度：{{msg.airHumidity}}%</view>
 		</view>
 		<view class="line" />
 		<view>
 			<view class="line-font iconfont icon-taiyang" />
-			<view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}</view>
+			<view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}%</view>
 		</view>
 		<view class="line" />
 		<view>
@@ -36,9 +36,11 @@
 		 wx:for-index="index"
 		 wx:key="{{pot.id}}"
 		 data-pot="{{pot}}"
+     bindtouchstart="touchStart"
 		 bind:tap="touchListItem"
+     bindlongpress="touchDelete"
 		>
-			<view class="weui-media-box weui-media-box_text">
+			<view class="weui-media-box weui-media-box_text"  hover-class="hover">
 				<view class="weui-media-box__title weui-media-box__title_in-text">
 					{{pot.id}}.{{pot.name}}
 				</view>

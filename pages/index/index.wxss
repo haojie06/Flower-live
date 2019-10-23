@@ -56,7 +56,6 @@ page
 
 .flower-list
 {
-  margin: 0, auto;
   position: relative;
   margin: 5px auto;
   border-top-color: gray;
@@ -125,4 +124,10 @@ page
 
 .mini-btn {
   margin: auto 5px;
+}
+
+.hover
+{
+  background-color: white;
+  opacity: 0.4;
 }
