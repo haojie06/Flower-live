@@ -185,3 +185,7 @@ Page({
 		});
 	}
 });
+
+function hexPacketDecode(hexPacket){
+
+}
