@@ -17,7 +17,8 @@ Page({
 			temper: '0',
 			airHumidity: '0',
 			soilHumidity: '0',
-			light: '0'
+			light: '0',
+			updateTime: '2019-10-1 22:22:22'
 		},
 		flower_pots: [
 			{
@@ -75,12 +76,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
 	onShow: function() {
-		this.setData({
-			msg: {
-				name: this.data.flower_pots[0].name,
-				id: this.data.flower_pots[0].id
-			}
-		});
+		this.setData({});
 	},
 
 	/**
@@ -132,10 +128,39 @@ Page({
 				duration: 1200
 			});
 
-			this.setData({
-				msg: {
-					name: pot.name,
-					id: pot.id
+			wx.request({
+				url: 'https://cloud.alientek.com/api/orgs/1365/devicepacket/82565207641917183639',
+				data: {},
+				method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+				header: {
+					token: 'bce786a63e1640878067e25738a74f0a'
+				}, // 设置请求的 header
+				success: (res) => {
+					// success
+					console.log(res.data.data.items);
+					let response = res.data.data.items[0];
+					wx.showToast({
+						title: '成功更新数据',
+						icon: 'Success',
+						image: '',
+						duration: 1500,
+						mask: false
+					});
+
+					let msg = this.data.msg;
+					msg.updateTime = response.time;
+					msg.id = pot.id;
+					msg.name = pot.name;
+					this.setData({
+						msg: msg
+					});
+					console.log(hexToString(response.hex_packet));
+				},
+				fail: function() {
+					// fail
+				},
+				complete: function() {
+					// complete
 				}
 			});
 		}
@@ -242,7 +267,7 @@ Page({
 		});
 	}
 });
-//格式 形如CE C2 B6 C8 3A 32 37 20 43 2C CA AA B6 C8 3A 34 38 20 25 20 0D 0A 
+//格式 形如CE C2 B6 C8 3A 32 37 20 43 2C CA AA B6 C8 3A 34 38 20 25 20 0D 0A
 function hexToString(hexString) {
 	let hexArr = hexString.toLowerCase().split(' ');
 	let codeArr = [];
@@ -251,5 +276,5 @@ function hexToString(hexString) {
 		let fb = parseInt(hexArr[i], 16);
 		codeArr.push(fb);
 	}
-	console.log(decode(codeArr));
+	return decode(codeArr);
 }

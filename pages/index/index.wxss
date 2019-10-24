@@ -4,7 +4,7 @@
 
 page
 {
-  position: absolute;
+  position: fixed;
   background-color: #f4f4f4f4;
   height: 100%;
   width: 100%;
@@ -20,10 +20,17 @@ page
 
 .title
 {
+  font-size: 1em;
   text-align: center;
   font-weight: bold;
   margin-bottom: 10rpx;
   border-bottom: 1px gray dotted;
+}
+
+.afterTitle
+{
+  font-size: 0.4em;
+  color: gray;
 }
 
 .showMsg

@@ -1,6 +1,10 @@
 <view class="show">
 	<view class="showMsg">
-		<view class="title">花盆:{{msg.name}} id: {{msg.id}}</view>
+		<view class="title">
+			<text>{{msg.id}}.{{msg.name}} </text>
+			<text class="afterTitle">更新时间:{{msg.updateTime}}</text>
+		</view>
+
 		<view>
 			<view class="line-font iconfont icon-wendu" />
 			<view class="showItem" id="temper">大气温度：{{msg.temper}}℃</view>
@@ -20,6 +24,7 @@
 			<view class="line-font iconfont icon-taiyang1" />
 			<view class="showItem" id="light">光照强度：{{msg.light}}</view>
 		</view>
+
 	</view>
 	<scroll-view
 	 class="flower-list"
@@ -36,11 +41,11 @@
 		 wx:for-index="index"
 		 wx:key="{{pot.id}}"
 		 data-pot="{{pot}}"
-     bindtouchstart="touchStart"
+		 bindtouchstart="touchStart"
 		 bind:tap="touchListItem"
-     bindlongpress="touchDelete"
+		 bindlongpress="touchDelete"
 		>
-			<view class="weui-media-box weui-media-box_text"  hover-class="hover">
+			<view class="weui-media-box weui-media-box_text" hover-class="hover">
 				<view class="weui-media-box__title weui-media-box__title_in-text">
 					{{pot.id}}.{{pot.name}}
 				</view>
@@ -56,29 +61,37 @@
 	<view class="potModal" wx:if="{{showModal}}">
 		<text class="modal-title">请输入花盆信息</text>
 		<form bindsubmit="submitModal">
-		<view class="weui-cells weui-cells_after-title">
-			<view class="weui-cell ">
-				<view class="weui-cell__hd">
-					<view class="weui-label">花盆id</view>
+			<view class="weui-cells weui-cells_after-title">
+				<view class="weui-cell ">
+					<view class="weui-cell__hd">
+						<view class="weui-label">花盆id</view>
+					</view>
+					<view class="weui-cell__bd">
+						<input class="weui-input" placeholder="请输入花盆id" name="potId" />
+						<!--form中name属性不能少-->
+					</view>
 				</view>
-				<view class="weui-cell__bd">
-					<input class="weui-input" placeholder="请输入花盆id" name="potId"/> <!--form中name属性不能少-->
-				</view>
-			</view>
 
-			<view class="weui-cell ">
-				<view class="weui-cell__hd">
-					<view class="weui-label">花盆名</view>
+				<view class="weui-cell ">
+					<view class="weui-cell__hd">
+						<view class="weui-label">花盆名</view>
+					</view>
+					<view class="weui-cell__bd">
+						<input class="weui-input" placeholder="请输入花盆的命名" name="potName" />
+					</view>
 				</view>
-				<view class="weui-cell__bd">
-					<input class="weui-input" placeholder="请输入花盆的命名" name="potName"/>
-				</view>
-			</view>
 
-			<view class="weui-cell">
-				<view class="weui-cell__bd">
-					<textarea class="weui-textarea" placeholder="请输入花盆备注信息" style="height: 3.3em" name="potDesc" bind:input="descInput" maxlength="50"/>
-					<view class="weui-textarea-counter">{{curDescCount}}/50</view>
+				<view class="weui-cell">
+					<view class="weui-cell__bd">
+						<textarea
+						 class="weui-textarea"
+						 placeholder="请输入花盆备注信息"
+						 style="height: 3.3em"
+						 name="potDesc"
+						 bind:input="descInput"
+						 maxlength="50"
+						/>
+						<view class="weui-textarea-counter">{{curDescCount}}/50</view>
         </view>
 			</view>
 		</view>
