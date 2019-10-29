@@ -166,53 +166,68 @@ Page({
 		time = e.timeStamp;
 	},
 
-	//点击花盆列表中的元素
+	//点击花盆列表中的元素，先查看该花盆是否在线
 	touchListItem: function(p) {
 		if (time - p.timeStamp < 350) {
 			//判断是否为短碰
 			console.log(p.currentTarget.dataset.pot);
 			let pot = p.currentTarget.dataset.pot;
-			//发送请求，更新数据
 			wx.showToast({
-				title: '数据更新中',
+				title: '尝试连接',
 				icon: 'loading',
 				duration: 1200
 			});
 
-			wx.request({
-				url: 'https://cloud.alientek.com/api/orgs/1365/devicepacket/82565207641917183639',
-				data: {},
-				method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-				header: {
-					token: 'bce786a63e1640878067e25738a74f0a'
-				}, // 设置请求的 header
-				success: (res) => {
-					// success
-					console.log(res.data.data.items);
-					let response = res.data.data.items[0];
-					wx.showToast({
-						title: '成功更新数据',
-						icon: 'Success',
-						image: '',
-						duration: 1500,
-						mask: false
-					});
+			//尝试建立wss连接
+			let sockTask = wx.connectSocket({
+				url: 'wss://cloud.alientek.com/connection/bce786a63e1640878067e25738a74f0a/org/1365?token=' + newGuid(),
+				header: {},
+				method: 'GET',
+				protocols: [],
+				success: () => {},
+				fail: () => {},
+				complete: () => {}
+			});
 
-					let msg = this.data.msg;
-					msg.updateTime = response.time;
-					msg.id = pot.id;
-					msg.name = pot.name;
-					this.setData({
-						msg: msg
-					});
-					console.log(hexToString(response.hex_packet));
-				},
-				fail: function() {
-					// fail
-				},
-				complete: function() {
-					// complete
+			wx.onSocketOpen((result) => {});
+
+			sockTask.onClose(() => {
+				console.log('WSS连接关闭');
+			});
+
+			sockTask.onOpen(() => {
+				console.log('WSS连接已经建立');
+				let enco = '03034570528203795997';
+				//let arrayBuffer = new ArrayBuffer(21);
+				let numList = encode(enco);
+				let hexString = '';
+				console.log(numList);
+				for (let n of numList) {
+					hexString += n.toString(16);
 				}
+				console.log(hexString);
+
+				let packet = '01' + hexString;
+				let abPacket = hex2ab(packet);
+				console.log('buffer长度' + abPacket.byteLength);
+
+				//订阅设备信息
+				sockTask.send({
+					data: abPacket,
+					success: (result) => {
+						console.log('WSS发送监听请求');
+						console.log(result);
+					}
+				});
+			});
+
+			//监听信息
+			sockTask.onMessage((data) => {
+				console.log('WSS收到信息');
+				console.log(data);
+				let buffer = data.data;
+				let abHex = ab2hex(buffer);
+				console.log(abHex);
 			});
 		}
 	},
@@ -329,3 +344,33 @@ function hexToString(hexString) {
 	}
 	return decode(codeArr);
 }
+
+function newGuid() {
+	var guid = '';
+	for (var i = 1; i <= 32; i++) {
+		var n = Math.floor(Math.random() * 16.0).toString(16);
+		guid += n;
+		if (i == 8 || i == 12 || i == 16 || i == 20) guid += '-';
+	}
+	return guid;
+}
+
+var hex2ab = function(hex) {
+	var typedArray = new Uint8Array(
+		hex.match(/[\da-f]{2}/gi).map(function(h) {
+			return parseInt(h, 16);
+		})
+	);
+
+	var buffer = typedArray.buffer;
+	return buffer;
+};
+
+
+const ab2hex = function(buffer) {
+	var hexArr = Array.prototype.map.call(new Uint8Array(buffer), function(bit) {
+		return ('00' + bit.toString(16)).slice(-2);
+	});
+	return hexArr.join('');
+};
+
