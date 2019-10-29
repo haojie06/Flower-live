@@ -138,3 +138,19 @@ page
   background-color: white;
   opacity: 0.4;
 }
+
+.pot-status-offline {
+  position: absolute;
+  font-size: 0.75em;
+  right: 35px;
+  top: 6px;
+  color: red;
+}
+
+.pot-status-online {
+  position: absolute;
+  font-size: 0.75em;
+  right: 35px;
+  top: 6px;
+  color: green;
+}

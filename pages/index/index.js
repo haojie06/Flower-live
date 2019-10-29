@@ -22,34 +22,46 @@ Page({
 		},
 		flower_pots: [
 			{
-				id: 1,
-				name: '郁金香',
-				desc: '湿度不小于XXX，光照时间不小于XXX'
+				id: 3092,
+				name: '示例花盆',
+				desc: '湿度不小于XXX，光照时间不小于XXX',
+				pot_status: 'pot-status-offline',
+				status: '离线'
 			},
 			{
 				id: 2,
 				name: '玫瑰',
-				desc: '温度范围~，湿度不小于XXX，光照时间不小于XXX'
+				desc: '温度范围~，湿度不小于XXX，光照时间不小于XXX',
+				pot_status: 'pot-status-offline',
+				status: '离线'
 			},
 			{
 				id: 3,
 				name: 'test2',
-				desc: '描述'
+				desc: '描述',
+				pot_status: 'pot-status-offline',
+				status: '离线'
 			},
 			{
 				id: 4,
 				name: 'test2',
-				desc: '描述'
+				desc: '描述',
+				pot_status: 'pot-status-offline',
+				status: '离线'
 			},
 			{
 				id: 5,
 				name: 'test2',
-				desc: '描述'
+				desc: '描述',
+				pot_status: 'pot-status-offline',
+				status: '离线'
 			},
 			{
 				id: 6,
 				name: 'test2',
-				desc: '描述'
+				desc: '描述',
+				pot_status: 'pot-status-offline',
+				status: '离线'
 			}
 		]
 	},
@@ -98,7 +110,46 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
 	onPullDownRefresh: function() {
-		hexToString('CE C2 B6 C8 3A 32 37 20 43 2C CA AA B6 C8 3A 34 38 20 25 20 0D 0A');
+		//获得当前列表中所有的花盆的id
+		let pots = this.data.flower_pots;
+		for (let index in pots) {
+			let pot = pots[index];
+			console.log('花盆ID：' + pot.id);
+			//刷新花盆列表在线情况
+			wx.request({
+				url: 'https://cloud.alientek.com/api/orgs/1365/devicestate/' + pot.id,
+				data: {},
+				method: 'GET',
+				header: {
+					token: 'bce786a63e1640878067e25738a74f0a'
+				}, // 设置请求的 header
+				success: (res) => {
+					// success
+					let response = res.data;
+					//console.log(response);
+					//测试用
+					if (response.data != null || response.data == 'disconnect') {
+						console.log(response);
+						console.log(`更新${pot.id}成功`);
+						pots[index].status = '在线';
+						pots[index].pot_status = 'pot-status-online';
+						//注意这里修改数组中对象的方式
+						this.setData({
+							flower_pots: pots
+						});
+						wx.showToast({
+							title: '成功更新数据',
+							icon: 'Success',
+							image: '',
+							duration: 1500,
+							mask: false
+						});
+					} else {
+						console.log(`更新${pot.id}失败`);
+					}
+				}
+			});
+		}
 	},
 
 	/**
