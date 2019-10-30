@@ -225,7 +225,7 @@ Page({
 				let msg = 'test message';
 				let codeMsgs = encode(msg);
 				let hexMsg = '';
-				for (let m of codeMsg) {
+				for (let m of codeMsgs) {
 					hexMsg += m.toString(16);
 				}
 				packet = '03' + hexNumber + hexMsg;
