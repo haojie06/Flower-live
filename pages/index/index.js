@@ -200,14 +200,14 @@ Page({
 				let enco = '03034570528203795997';
 				//let arrayBuffer = new ArrayBuffer(21);
 				let numList = encode(enco);
-				let hexString = '';
+				let hexNumber = '';
 				console.log(numList);
 				for (let n of numList) {
-					hexString += n.toString(16);
+					hexNumber += n.toString(16);
 				}
-				console.log(hexString);
+				console.log(hexNumber);
 
-				let packet = '01' + hexString;
+				let packet = '01' + hexNumber;
 				let abPacket = hex2ab(packet);
 				console.log('buffer长度' + abPacket.byteLength);
 
@@ -217,6 +217,22 @@ Page({
 					success: (result) => {
 						console.log('WSS发送监听请求');
 						console.log(result);
+					}
+				});
+
+				//发送信息到设备
+				//将信息按gb2312编码
+				let msg = 'test message';
+				let codeMsgs = encode(msg);
+				let hexMsg = '';
+				for (let m of codeMsg) {
+					hexMsg += m.toString(16);
+				}
+				packet = '03' + hexNumber + hexMsg;
+				sockTask.send({
+					data: hex2ab(packet),
+					success: (result) => {
+						console.log('成功给设备发送信息');
 					}
 				});
 			});
@@ -366,11 +382,9 @@ var hex2ab = function(hex) {
 	return buffer;
 };
 
-
 const ab2hex = function(buffer) {
 	var hexArr = Array.prototype.map.call(new Uint8Array(buffer), function(bit) {
 		return ('00' + bit.toString(16)).slice(-2);
 	});
 	return hexArr.join('');
 };
-
