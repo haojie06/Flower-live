@@ -128,7 +128,7 @@ Page({
 					let response = res.data;
 					//console.log(response);
 					//测试用
-					if (response.data != null || response.data == 'disconnect') {
+					if (response.data != null || response.data == 'connected') {
 						console.log(response);
 						console.log(`更新${pot.id}成功`);
 						pots[index].status = '在线';
@@ -177,7 +177,8 @@ Page({
 				icon: 'loading',
 				duration: 1200
 			});
-
+			//暂存目前显示的id
+			this.data.id = p.currentTarget.dataset.pot.id;
 			//尝试建立wss连接
 			let sockTask = wx.connectSocket({
 				url: 'wss://cloud.alientek.com/connection/bce786a63e1640878067e25738a74f0a/org/1365?token=' + newGuid(),
@@ -244,6 +245,32 @@ Page({
 				let buffer = data.data;
 				let abHex = ab2hex(buffer);
 				console.log(abHex);
+				//解码成文字,十六进制两个字符一组
+				let tempArr = abHex.split('');
+				let codeArr = [];
+				let test = 'test message';
+				for (let i = 0; i < tempArr.length; i++) {
+					codeArr.push(tempArr[i] + tempArr[i + 1]);
+					i += 1;
+				}
+
+				let intArr = codeArr.map((str) => {
+					return parseInt(str, 16);
+				});
+				let message = decode(intArr);
+				//获得信息对象
+				let msgObject = JSON.parse(message.substring(message.indexOf('{'), message.length));
+				console.log(msgObject);
+
+				let currentMsg = this.data.msg;
+				currentMsg.id = this.data.id;
+				currentMsg.temper = msgObject.temperature;
+				currentMsg.airHumidity = msgObject.air_humidity;
+				currentMsg.soilHumidity = msgObject.humidity;
+				currentMsg.updateTime = new Date().toUTCString();
+				this.setData({
+					msg: currentMsg
+				});
 			});
 		}
 	},
@@ -354,7 +381,6 @@ function hexToString(hexString) {
 	let hexArr = hexString.toLowerCase().split(' ');
 	let codeArr = [];
 	for (let i = 0; i < hexArr.length; i++) {
-		//如果大于128就读两个字节
 		let fb = parseInt(hexArr[i], 16);
 		codeArr.push(fb);
 	}
