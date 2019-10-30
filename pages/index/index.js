@@ -1,6 +1,7 @@
 // pages/index/index.js
 var time = 0;
 const { encode, decode } = require('fast-gbk');
+let that = this;
 Page({
 	/**
    * 页面的初始数据
@@ -223,19 +224,29 @@ Page({
 
 				//发送信息到设备
 				//将信息按gb2312编码
-				let msg = 'test message';
-				let codeMsgs = encode(msg);
-				let hexMsg = '';
-				for (let m of codeMsgs) {
-					hexMsg += m.toString(16);
-				}
-				packet = '03' + hexNumber + hexMsg;
-				sockTask.send({
-					data: hex2ab(packet),
-					success: (result) => {
-						console.log('成功给设备发送信息');
+				let count = 0;
+				let timer = setInterval(() => {
+					let time = new Date().toUTCString();
+					let msg = 'test:' + count + time;
+					let codeMsgs = encode(msg);
+					let hexMsg = '';
+					for (let m of codeMsgs) {
+						hexMsg += m.toString(16);
 					}
-				});
+					packet = '03' + hexNumber + hexMsg;
+
+					sockTask.send({
+						data: hex2ab(packet),
+						success: (result) => {
+							console.log('成功给设备发送信息' + msg);
+						}
+					});
+					count++;
+					if (count == 11) {
+						clearInterval(timer);
+						console.log('停止发送信息');
+					}
+				}, 1000);
 			});
 
 			//监听信息
@@ -276,7 +287,6 @@ Page({
 	},
 
 	touchDelete: function(p) {
-		var that = this;
 		let deleteId = p.currentTarget.dataset.pot.id;
 		let pot = p.currentTarget.dataset.pot;
 		let pots = this.data.flower_pots;
