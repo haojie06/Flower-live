@@ -31,7 +31,7 @@
 						<view class="vertical-line"></view>
 						<view class="control-btn light">光照</view>
 				</view>
-				<image class="potPic" src="/images/pot_normal.png" mode="aspectFill" />
+				<image class="potPic" src="/images/{{autoPic}}.png" mode="aspectFill" bindtap="autoSet" data-msg="{{msg}}" />
 		</view>
 		<scroll-view class="flower-list" scroll-y="true" scroll-with-animation="true" enable-back-to-top="true">
 				<view class="list-item" hover-class="none" hover-stop-propagation="false" wx:for="{{flower_pots}}" wx:for-item="pot" wx:for-index="index" wx:key="{{pot.id}}" data-pot="{{pot}}" bindtouchstart="touchStart" bind:tap="touchListItem" bindlongpress="touchDelete">
@@ -46,7 +46,7 @@
 		</scroll-view>
 		<button class="add-pot iconfont icon-huapen" bind:tap="addPot" />
 		<!-- 遮罩 -->
-		<view class="mask" wx:if="{{showModal}}" />
+		<view class="mask" wx:if="{{showModal||showAuto}}" />
 		<view class="potModal" wx:if="{{showModal}}">
 				<text class="modal-title">请输入花盆信息</text>
 				<form bindsubmit="submitModal">
@@ -81,4 +81,34 @@
 						</view>
 				</form>
 		</view>
+
+    <view class="autoModal" wx:if="{{showAuto}}" >
+            <view>
+          <picker bindchange="flowerPick" mode="selector" range="{{flower_msg}}" value="{{index}}" range-key="{{'name'}}">
+            <text class="modal-title">选择花卉类型</text>
+            <view class="weui-cells weui-cells_after-title">
+             <view class="weui-cell ">
+                    <view class="weui-cell__hd">
+                        <view class="weui-label">当前选择：</view>
+                    </view>
+                    <view class="weui-cell__bd">
+                      {{flower_msg[index].name}}
+                    </view>
+             </view>
+             <view class="weui-cell">
+                    <view class="weui-cell__bd">
+                        <view class="weui-label">信息：</view>
+                    </view>
+                    <view class="weui-cell__hd">
+                      {{flower_msg[index].desc}}
+                    </view>
+             </view>
+            </view>
+          </picker>
+        </view>
+        <view class="modal-buttons">
+          <button class="weui-btn mini-btn" type="primary" size="mini" bind:tap="autoCancel">确定</button>
+        </view>
+    </view>
+
 </view>

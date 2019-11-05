@@ -1,17 +1,28 @@
 // pages/index/index.js
-var time = 0;
+var touchStartTime = 0;
+var touchEndTime = 0;
+// 最后一次单击事件点击发生时间
+lastTapTime = 0;
+// 单击事件后要触发的函数
+lastTapTimeoutFunc = null;
+
 const { encode, decode } = require('fast-gbk');
+var enco = '03034570528203795997';
+var numList = encode(enco);
+var globalSocket = null;
+
 let that = this;
 Page({
 	/**
    * 页面的初始数据
    */
 	data: {
-		id: 1,
-		idArr: [],
 		showModal: false,
+    showAuto: false,
 		disableDescInput: false,
 		curDescCount: 0,
+    autoPic: 'auto_off',
+    index: 0,
 		msg: {
 			id: 1,
 			name: 'test',
@@ -64,7 +75,23 @@ Page({
 				pot_status: 'pot-status-offline',
 				status: '离线'
 			}
-		]
+		],
+    flower_msg:[
+      {
+        id: 1,
+        name: "郁金香",
+        soilHumidity: 50,
+        light: 50,
+        desc: "土壤湿度不低于: 50，光照强度不低于: 50"
+      },
+      {
+        id: 2,
+        name: '玫瑰',
+        soilHumidity: 50,
+        light: 50,
+        desc: "土壤湿度不低于: 30，光照强度不低于: 60"
+      }
+    ]
 	},
 
 	/**
@@ -75,7 +102,7 @@ Page({
 		if (pots.length == 0) {
 		} else {
 			this.setData({
-				flower_pots: pots
+				flower_pots: pots,
 			});
 		}
 	},
@@ -146,6 +173,11 @@ Page({
 							mask: false
 						});
 					} else {
+            pots[index].status = "离线";
+            pots[index].pot_status = "pot-status-offline";
+            this.setData({
+              flower_pots: pots
+            });
 						console.log(`更新${pot.id}失败`);
 					}
 				}
@@ -164,12 +196,15 @@ Page({
 	onShareAppMessage: function() {},
 
 	touchStart: function(e) {
-		time = e.timeStamp;
+		touchStartTime = e.timeStamp;
 	},
+  touchEnd: function(e){
+    touchEndTime = e.timeStamp;
+  },
 
 	//点击花盆列表中的元素，先查看该花盆是否在线
 	touchListItem: function(p) {
-		if (time - p.timeStamp < 350) {
+		if (touchStartTime - p.timeStamp < 350) {
 			//判断是否为短碰
 			console.log(p.currentTarget.dataset.pot);
 			let pot = p.currentTarget.dataset.pot;
@@ -180,6 +215,12 @@ Page({
 			});
 			//暂存目前显示的id
 			this.data.id = p.currentTarget.dataset.pot.id;
+
+      //判断是否离线
+      if (pot.pot_status == 'pot-status-offline')
+      return console.log("花盆 "+pot.id +" 离线，无法连接到服务器");
+      this.setData({autoPic: 'auto_off'});
+
 			//尝试建立wss连接
 			let sockTask = wx.connectSocket({
 				url: 'wss://cloud.alientek.com/connection/bce786a63e1640878067e25738a74f0a/org/1365?token=' + newGuid(),
@@ -190,6 +231,8 @@ Page({
 				fail: () => {},
 				complete: () => {}
 			});
+      
+      globalSocket = sockTask;
 
 			wx.onSocketOpen((result) => {});
 
@@ -199,9 +242,6 @@ Page({
 
 			sockTask.onOpen(() => {
 				console.log('WSS连接已经建立');
-				let enco = '03034570528203795997';
-				//let arrayBuffer = new ArrayBuffer(21);
-				let numList = encode(enco);
 				let hexNumber = '';
 				console.log(numList);
 				for (let n of numList) {
@@ -224,7 +264,7 @@ Page({
 
 				//发送信息到设备
 				//将信息按gb2312编码
-				let count = 0;
+				/*let count = 0;
 				let timer = setInterval(() => {
 					let time = new Date().toUTCString();
 					let msg = 'test:' + count + time;
@@ -247,6 +287,7 @@ Page({
 						console.log('停止发送信息');
 					}
 				}, 1000);
+      */
 			});
 
 			//监听信息
@@ -278,6 +319,7 @@ Page({
 				currentMsg.temper = msgObject.temperature;
 				currentMsg.airHumidity = msgObject.air_humidity;
 				currentMsg.soilHumidity = msgObject.humidity;
+        currentMsg.light = msgObject.light_intensity;
 				currentMsg.updateTime = new Date().toUTCString();
 				this.setData({
 					msg: currentMsg
@@ -291,10 +333,10 @@ Page({
 		let pot = p.currentTarget.dataset.pot;
 		let pots = this.data.flower_pots;
 
-		if (deleteId >= 1 && deleteId <= 6) {
-			//1-6花盆无法删除
+		if (deleteId == 3092) {
+			//花盆3092无法删除
 			wx.showToast({
-				title: '无法删除前六个',
+				title: '无法删除此花盆',
 				icon: 'error',
 				image: '/images/error.png',
 				duration: 1200
@@ -338,6 +380,7 @@ Page({
 	modalCancel: function() {
 		this.setData({
 			showModal: false,
+      showAuto: false,
 			curDescCount: 0
 		});
 	},
@@ -384,7 +427,58 @@ Page({
 			showModal: false,
 			curDescCount: 0
 		});
-	}
+	},
+
+  autoSet:function(e){
+    let that = this;
+    let pic = this.data.autoPic == 'auto_off' ? 'auto_on' : 'auto_off';
+
+    // 判断是否为双击事件
+    var curTime = e.timeStamp;
+    var lastTime = lastTapTime;
+    lastTapTime = curTime;
+
+    if(curTime - lastTime < 300){
+      console.log("双击");
+      clearTimeout(lastTapTimeoutFunc);
+      that.setData({
+        showAuto: true,
+        });
+      
+    }
+    else{
+    lastTapTimeoutFunc = setTimeout(function () {
+      let index = that.data.index;
+      let flowerId = that.data.flower_msg[index].id;
+      console.log("单击");
+      if (pic == 'auto_on') {
+        wx.showToast({
+          title: '自动管理设置',
+        });
+        sendData(flowerId);
+      }
+      else {
+        wx.showToast({
+          title: '自动管理取消',
+        });
+        sendData(); //发送0取消管理
+      }
+      that.setData({ autoPic: pic });
+      }, 300)
+    }
+  },
+
+  flowerPick: function(e){
+    this.setData({index: e.detail.value});
+    console.log(e.detail.value);
+  },
+
+  autoCancel: function(){
+    this.setData({
+      showAuto: false,
+      autoPic: 'auto_off'});
+  }
+
 });
 //格式 形如CE C2 B6 C8 3A 32 37 20 43 2C CA AA B6 C8 3A 34 38 20 25 20 0D 0A
 function hexToString(hexString) {
@@ -423,4 +517,27 @@ const ab2hex = function(buffer) {
 		return ('00' + bit.toString(16)).slice(-2);
 	});
 	return hexArr.join('');
+};
+
+//发送信息，参数为0时停止自动浇水和补光
+var sendData = function(msg){
+  let flowerId = msg || 0;
+  let codeMsgs = encode(flowerId);
+  let hexMsg = '';
+  let hexNumber = '';
+  for(let m of codeMsgs){
+    hexMsg += m.toString(16);
+  }
+  for (let n of numList) {
+    hexNumber += n.toString(16);
+  }
+  packet = '03' + hexNumber + hexMsg;
+  if(globalSocket != null){
+    globalSocket.send({
+      data: hex2ab(packet),
+      success: (res)=>{
+        console.log("成功发送信息" + flowerId);
+      }
+    })
+  }
 };
