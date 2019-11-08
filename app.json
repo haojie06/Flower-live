@@ -1,7 +1,9 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/comment/comment",
+    "pages/info/info"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -9,5 +11,30 @@
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "selectedColor": "#11cd6e",
+    "color": "#a9b7b7",
+    "backgroundColor": "#ff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "信息",
+        "iconPath": "images/xiaoxi_1.png",
+        "selectedIconPath": "images/xiaoxi.png"
+      },
+      {
+        "pagePath": "pages/comment/comment",
+        "text": "论坛",
+        "iconPath": "images/jurassic_bbs_1.png",
+        "selectedIconPath": "images/jurassic_bbs.png"
+      },
+      {
+        "pagePath": "pages/info/info",
+        "text": "关于",
+        "iconPath": "images/guanyuwomen_1.png",
+        "selectedIconPath": "images/guanyuwomen.png"
+      }
+    ]
+  }
 }

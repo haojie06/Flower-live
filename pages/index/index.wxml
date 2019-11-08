@@ -2,7 +2,7 @@
 		<view class="showMsg">
 				<view class="title">
 						<text>{{msg.id}}.{{msg.name}}</text>
-						<text class="afterTitle">更新时间:{{msg.updateTime}}</text>
+						<text class="afterTitle" style="display:block">更新时间:{{msg.updateTime}}</text>
 				</view>
 				<view>
 						<view class="line-font iconfont icon-wendu" />

@@ -17,6 +17,7 @@ Page({
    * 页面的初始数据
    */
 	data: {
+    id: 1,
 		showModal: false,
     showAuto: false,
 		disableDescInput: false,
@@ -213,13 +214,15 @@ Page({
 				icon: 'loading',
 				duration: 1200
 			});
-			//暂存目前显示的id
-			this.data.id = p.currentTarget.dataset.pot.id;
 
       //判断是否离线
       if (pot.pot_status == 'pot-status-offline')
       return console.log("花盆 "+pot.id +" 离线，无法连接到服务器");
+
+      //暂存目前显示的id和花盆名字name
+      this.data.id = p.currentTarget.dataset.pot.id;
       this.setData({autoPic: 'auto_off'});
+      this.data.msg.name = pot.name;
 
 			//尝试建立wss连接
 			let sockTask = wx.connectSocket({
@@ -311,7 +314,8 @@ Page({
 				});
 				let message = decode(intArr);
 				//获得信息对象
-				let msgObject = JSON.parse(message.substring(message.indexOf('{'), message.length));
+        console.log(message.lastIndexOf('}')+ ' \ '+ message.length);
+				let msgObject = JSON.parse(message.substring(message.indexOf('{'), message.lastIndexOf('}') + 1));
 				console.log(msgObject);
 
 				let currentMsg = this.data.msg;
