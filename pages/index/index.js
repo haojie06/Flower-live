@@ -11,6 +11,8 @@ var enco = '03034570528203795997';
 var numList = encode(enco);
 var globalSocket = null;
 
+var water = true;
+var light = false;
 let that = this;
 Page({
 	/**
@@ -23,6 +25,7 @@ Page({
 		disableDescInput: false,
 		curDescCount: 0,
     autoPic: 'auto_off',
+    lightColor: 'black',
     index: 0,
 		msg: {
 			id: 1,
@@ -216,7 +219,7 @@ Page({
 			});
 
       //判断是否离线
-      if (pot.pot_status == 'pot-status-offline')
+      if (pot.pot_status == 'pot-status-offline'|| pot.pot_status == null)
       return console.log("花盆 "+pot.id +" 离线，无法连接到服务器");
 
       //暂存目前显示的id和花盆名字name
@@ -235,6 +238,7 @@ Page({
 				complete: () => {}
 			});
       
+      //存储websocket
       globalSocket = sockTask;
 
 			wx.onSocketOpen((result) => {});
@@ -314,9 +318,12 @@ Page({
 				});
 				let message = decode(intArr);
 				//获得信息对象
-        console.log(message.lastIndexOf('}')+ ' \ '+ message.length);
 				let msgObject = JSON.parse(message.substring(message.indexOf('{'), message.lastIndexOf('}') + 1));
 				console.log(msgObject);
+
+        let date = new Date();
+        let hours = date.getHours() + 8;
+        date.setHours(hours)
 
 				let currentMsg = this.data.msg;
 				currentMsg.id = this.data.id;
@@ -324,7 +331,7 @@ Page({
 				currentMsg.airHumidity = msgObject.air_humidity;
 				currentMsg.soilHumidity = msgObject.humidity;
         currentMsg.light = msgObject.light_intensity;
-				currentMsg.updateTime = new Date().toUTCString();
+				currentMsg.updateTime = date.toUTCString();
 				this.setData({
 					msg: currentMsg
 				});
@@ -333,6 +340,7 @@ Page({
 	},
 
 	touchDelete: function(p) {
+    let that = this;
 		let deleteId = p.currentTarget.dataset.pot.id;
 		let pot = p.currentTarget.dataset.pot;
 		let pots = this.data.flower_pots;
@@ -342,7 +350,7 @@ Page({
 			wx.showToast({
 				title: '无法删除此花盆',
 				icon: 'error',
-				image: '/images/error.png',
+				image: "/images/error.png",
 				duration: 1200
 			});
 			return;
@@ -478,9 +486,76 @@ Page({
   },
 
   autoCancel: function(){
+    let pic = this.data.autoPic;
     this.setData({
       showAuto: false,
       autoPic: 'auto_off'});
+      //如果之前已经设置了自动，则会发送请求取消自动管理
+      if(pic == 'auto_on')
+        sendData();
+  },
+
+  water:function(){
+    if(!water)
+    {
+      wx.showToast({
+        title: '浇水别太急了!',
+        image: 'images/error.png',
+        duration: 1500
+      })
+      return
+    }
+
+    wx.showModal({
+      title: '浇水',
+      content: '是否需要浇水',
+      success:function(res)
+      {
+        if(res.confirm)
+        {
+          //设置每次浇水十秒钟以后才能再次浇水
+          let time = setTimeout(() => { water = true }, 10000);
+          water = false; 
+          sendData('a');
+          wx.showToast({
+            title: '已浇水'
+          });
+        }
+      }
+    });
+
+  },
+
+  light: function(){
+    let that = this;
+    if(light){
+      wx.showModal({
+        title: '取消',
+        content: '是否取消补光',
+        success:function(res){
+          if(res.confirm)
+          {
+            light = false;
+            sendData('c');
+            that.setData({lightColor: 'black'});
+          }
+        }
+      });
+      }
+      else{
+        wx.showModal({
+          title: '确认',
+          content: '是否进行补光',
+          success:function(res){
+            if(res.confirm)
+            {
+              light = true;
+              sendData('b');
+              that.setData({ lightColor: '#ffd700' });
+            }
+          }
+        });
+      }
   }
 
 });

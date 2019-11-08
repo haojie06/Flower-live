@@ -27,9 +27,9 @@
 		<view class="showPic">
 				<view class="statusPanel"></view>
 				<view class="controlPanel">
-						<view class="control-btn water">浇水</view>
+						<view class="control-btn water" bindtap="water" hover-class="hover">浇水</view>
 						<view class="vertical-line"></view>
-						<view class="control-btn light">光照</view>
+						<view class="control-btn light" bindtap="light" hover-class="hover" style="color:{{lightColor}}">补光</view>
 				</view>
 				<image class="potPic" src="/images/{{autoPic}}.png" mode="aspectFill" bindtap="autoSet" data-msg="{{msg}}" />
 		</view>
