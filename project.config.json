@@ -22,7 +22,7 @@
 		}
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.8.3",
+	"libVersion": "2.9.3",
 	"appid": "wx768fe73e0ab22d6c",
 	"projectname": "Flower",
 	"debugOptions": {

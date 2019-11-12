@@ -12,3 +12,8 @@
   box-sizing: border-box;
 } 
 
+page
+{
+  background-color: #f4f4f4f4;
+}
+

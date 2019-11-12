@@ -22,6 +22,7 @@ Page({
     id: 1,
 		showModal: false,
     showAuto: false,
+    showFlower: false,
 		disableDescInput: false,
 		curDescCount: 0,
     autoPic: 'auto_off',
@@ -29,7 +30,7 @@ Page({
     index: 0,
 		msg: {
 			id: 1,
-			name: 'test',
+			name: 'FlowerPot',
 			temper: '0',
 			airHumidity: '0',
 			soilHumidity: '0',
@@ -42,42 +43,48 @@ Page({
 				name: '示例花盆',
 				desc: '湿度不小于XXX，光照时间不小于XXX',
 				pot_status: 'pot-status-offline',
-				status: '离线'
+				status: '离线',
+        index: 0
 			},
 			{
 				id: 2,
 				name: '玫瑰',
 				desc: '温度范围~，湿度不小于XXX，光照时间不小于XXX',
 				pot_status: 'pot-status-offline',
-				status: '离线'
+				status: '离线',
+        index: 0
 			},
 			{
 				id: 3,
 				name: 'test2',
 				desc: '描述',
 				pot_status: 'pot-status-offline',
-				status: '离线'
+				status: '离线',
+        index: 0
 			},
 			{
 				id: 4,
 				name: 'test2',
 				desc: '描述',
 				pot_status: 'pot-status-offline',
-				status: '离线'
+				status: '离线',
+        index: 0
 			},
 			{
 				id: 5,
 				name: 'test2',
 				desc: '描述',
 				pot_status: 'pot-status-offline',
-				status: '离线'
+				status: '离线',
+        index: 0
 			},
 			{
 				id: 6,
 				name: 'test2',
 				desc: '描述',
 				pot_status: 'pot-status-offline',
-				status: '离线'
+				status: '离线',
+        index: 0
 			}
 		],
     flower_msg:[
@@ -86,16 +93,27 @@ Page({
         name: "郁金香",
         soilHumidity: 50,
         light: 50,
-        desc: "土壤湿度不低于: 50，光照强度不低于: 50"
+        desc: "土壤湿度不低于: 50 光照强度不低于: 50"
       },
       {
         id: 2,
         name: '玫瑰',
-        soilHumidity: 50,
+        soilHumidity: 30,
+        light: 60,
+        desc: "土壤湿度不低于: 30 光照强度不低于: 60"
+      },
+      {
+        id: 3,
+        name: '牡丹',
+        soilHumidity: 60,
         light: 50,
-        desc: "土壤湿度不低于: 30，光照强度不低于: 60"
+        desc: "土壤湿度不低于: 60 光照强度不低于: 50"
       }
-    ]
+    ],
+    soilHumArr:[10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100],
+    soilIdx: 0,
+    lightArr:[10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100],
+    lightIdx: 0
 	},
 
 	/**
@@ -103,12 +121,15 @@ Page({
    */
 	onLoad: function(options) {
 		let pots = wx.getStorageSync('pots');
+    let flowerMsg = wx.getStorageSync('flowerMsg');
 		if (pots.length == 0) {
 		} else {
 			this.setData({
 				flower_pots: pots,
 			});
 		}
+    if(flowerMsg)
+      this.setData({flower_msg: flowerMsg});
 	},
 
 	/**
@@ -121,21 +142,27 @@ Page({
    */
 	onShow: function() {
 		this.setData({});
+    console.log('show')
 	},
 
 	/**
    * 生命周期函数--监听页面隐藏
    */
-	onHide: function() {},
+	onHide: function() {
+    console.log('Hide')
+  },
 
 	/**
    * 生命周期函数--监听页面卸载
    */
+  //页面中止时会取消补光
 	onUnload: function() {
 		wx.setStorageSync({
 			key: 'pots',
 			data: this.data.flower_pots
 		});
+    wx.setStorageSync('flowerMsg', flower_msg);
+    console.log('Unload');
 	},
 
 	/**
@@ -160,7 +187,7 @@ Page({
 					let response = res.data;
 					//console.log(response);
 					//测试用
-					if (response.data != null || response.data == 'connected') {
+					if (response.data !== null && response.data == 'connected') {
 						console.log(response);
 						console.log(`更新${pot.id}成功`);
 						pots[index].status = '在线';
@@ -169,13 +196,13 @@ Page({
 						this.setData({
 							flower_pots: pots
 						});
-						wx.showToast({
+						/*wx.showToast({
 							title: '成功更新数据',
 							icon: 'Success',
 							image: '',
 							duration: 1500,
 							mask: false
-						});
+						});*/
 					} else {
             pots[index].status = "离线";
             pots[index].pot_status = "pot-status-offline";
@@ -187,6 +214,13 @@ Page({
 				}
 			});
 		}
+    wx.showToast({
+      title: '成功更新数据',
+      icon: 'Success',
+      image: '',
+      duration: 1500,
+      mask: false
+    });
 	},
 
 	/**
@@ -219,12 +253,12 @@ Page({
 			});
 
       //判断是否离线
-      if (pot.pot_status == 'pot-status-offline'|| pot.pot_status == null)
+      if (pot.pot_status == 'pot-status-offline'|| pot.pot_status === null)
       return console.log("花盆 "+pot.id +" 离线，无法连接到服务器");
 
-      //暂存目前显示的id和花盆名字name
+      //暂存目前显示的id和花盆名字name，改变自动控制状态为off
       this.data.id = p.currentTarget.dataset.pot.id;
-      this.setData({autoPic: 'auto_off'});
+      this.setData({ autoPic: 'auto_off' });
       this.data.msg.name = pot.name;
 
 			//尝试建立wss连接
@@ -393,6 +427,7 @@ Page({
 		this.setData({
 			showModal: false,
       showAuto: false,
+      showFlower: false,
 			curDescCount: 0
 		});
 	},
@@ -429,7 +464,8 @@ Page({
 			let newPot = {
 				name: e.detail.value.potName || 'test',
 				id: e.detail.value.potId || pots[pots.length - 1].id * 1 + 1,
-				desc: e.detail.value.potDesc || '描述'
+				desc: e.detail.value.potDesc || '描述',
+        index: 0
 			};
 			pots.push(newPot);
 		}
@@ -442,13 +478,27 @@ Page({
 	},
 
   autoSet:function(e){
+    if(touchStartTime - touchEndTime < 350)
+    {
     let that = this;
+    //选择此次操作要进行的状态
     let pic = this.data.autoPic == 'auto_off' ? 'auto_on' : 'auto_off';
 
     // 判断是否为双击事件
     var curTime = e.timeStamp;
     var lastTime = lastTapTime;
     lastTapTime = curTime;
+
+    //如果花卉种类为空的话则不会进行设置
+    let flowerMsg = this.data.flower_msg;
+    if(flowerMsg.length == 0)
+    {
+      wx.showToast({
+        title: '无花卉种类',
+        image: '/images/error.png'
+      })
+      return;
+    }
 
     if(curTime - lastTime < 300){
       console.log("双击");
@@ -461,29 +511,108 @@ Page({
     else{
     lastTapTimeoutFunc = setTimeout(function () {
       let index = that.data.index;
-      let flowerId = that.data.flower_msg[index].id;
+      let flower = that.data.flower_msg[index];
+      console.log('设置的花卉：' + flower.name);
       console.log("单击");
       if (pic == 'auto_on') {
         wx.showToast({
           title: '自动管理设置',
         });
-        sendData(flowerId);
+        //发送'a'+土壤湿度+光照强度
+        sendData('a' + flower.soilHumidity.toString() + flower.light.toString());
+        console.log('a' + flower.soilHumidity.toString() + flower.light.toString())
       }
-      else {
+      else if(pic == 'auto_off')
+      {
         wx.showToast({
           title: '自动管理取消',
         });
-        sendData(); //发送0取消管理
+        sendData('s'); //发送's'取消管理
       }
       that.setData({ autoPic: pic });
       }, 300)
     }
+    }
+  },
+
+  flowerSet:function(){
+    this.setData({showFlower: true});
   },
 
   flowerPick: function(e){
     this.setData({index: e.detail.value});
-    console.log(e.detail.value);
+    console.log('选择的花卉index: ' +  e.detail.value);
   },
+
+  waterSet: function(e){
+    this.setData({ soilIdx: e.detail.value })
+  },
+
+  lightSet: function (e) {
+    this.setData({ lightIdx: e.detail.value })
+  },
+
+  submitFlower: function(e){
+    let soilIdx = this.data.soilIdx;
+    let soilHum = this.data.soilHumArr[soilIdx];
+    let lightIdx = this.data.lightIdx;
+    let light = this.data.lightArr[lightIdx];
+
+    //添加花卉id，按照前面一个的id值递增；如果花卉种类为空，则id值自动为1
+    let flowerMsg = this.data.flower_msg;
+    let flowerId = 1;
+    if(flowerMsg.length != 0)
+      flowerId = flowerMsg[flowerMsg.length - 1].id * 1 + 1
+
+    let newFlower = {
+      id: flowerId,
+      name: e.detail.value.flowerName || 0,
+      soilHumidity: soilHum,
+      light: light,
+      desc: "土壤湿度不低于: " + soilHum + " 光照强度不低于: " + light
+    }
+
+    //存入数据
+    flowerMsg.push(newFlower);
+    this.setData({
+      flower_msg: flowerMsg,
+      showFlower: false,
+    });
+  },
+
+  //花卉种类删除，如果没有花卉种类为空，则删除无效
+  //每次删除后，置index为0，显示的内容会固定指向花卉类型的第一个类型
+  flowerDelete:function(){
+    let that = this;
+    let index = this.data.index;
+    let flowerMsg = this.data.flower_msg;
+    let flower = this.data.flower_msg[index];
+    let id = flower.id;
+
+    if(flowerMsg.length == 0)
+    {
+      console.log("无法删除");
+      return;
+    }
+
+    wx.showModal({
+      title: '删除',
+      content: '是否删除 ' + flower.name + ' 品种?'  ,
+      success: function(res){
+        if(res.confirm)
+        {
+          flowerMsg = flowerMsg.filter((x) => {
+            return x.id != id;
+          })
+          that.setData({
+            index: 0,
+            flower_msg: flowerMsg
+          })
+        }
+      }
+    })
+  },
+
 
   autoCancel: function(){
     let pic = this.data.autoPic;
@@ -491,8 +620,8 @@ Page({
       showAuto: false,
       autoPic: 'auto_off'});
       //如果之前已经设置了自动，则会发送请求取消自动管理
-      if(pic == 'auto_on')
-        sendData();
+    if(pic == 'auto_on')
+      sendData('s');
   },
 
   water:function(){
@@ -500,7 +629,7 @@ Page({
     {
       wx.showToast({
         title: '浇水别太急了!',
-        image: 'images/error.png',
+        image: '/images/error.png',
         duration: 1500
       })
       return
@@ -508,7 +637,7 @@ Page({
 
     wx.showModal({
       title: '浇水',
-      content: '是否需要浇水',
+      content: '是否需要浇水?',
       success:function(res)
       {
         if(res.confirm)
@@ -516,7 +645,7 @@ Page({
           //设置每次浇水十秒钟以后才能再次浇水
           let time = setTimeout(() => { water = true }, 10000);
           water = false; 
-          sendData('a');
+          sendData('x');
           wx.showToast({
             title: '已浇水'
           });
@@ -531,13 +660,17 @@ Page({
     if(light){
       wx.showModal({
         title: '取消',
-        content: '是否取消补光',
+        content: '是否取消补光?',
         success:function(res){
           if(res.confirm)
           {
             light = false;
-            sendData('c');
+            sendData('z');
             that.setData({lightColor: 'black'});
+            wx.showToast({
+              title: '取消补光',
+              duration: 1000
+            })
           }
         }
       });
@@ -545,13 +678,20 @@ Page({
       else{
         wx.showModal({
           title: '确认',
-          content: '是否进行补光',
+          content: '是否进行补光? \n (补光开启时自动控制会先关闭)',
           success:function(res){
             if(res.confirm)
             {
               light = true;
-              sendData('b');
-              that.setData({ lightColor: '#ffd700' });
+              sendData('y');
+              that.setData({
+                lightColor: '#ffd700',
+                autoPic: 'auto_off'
+              });
+              wx.showToast({
+                title: '开启补光',
+                duration: 1000
+              })
             }
           }
         });
@@ -598,10 +738,10 @@ const ab2hex = function(buffer) {
 	return hexArr.join('');
 };
 
-//发送信息，参数为0时停止自动浇水和补光
-var sendData = function(msg){
-  let flowerId = msg || 0;
-  let codeMsgs = encode(flowerId);
+//发送信息，参数为's'时停止自动浇水和补光
+var sendData = function(data){
+  let msg = data || 's';
+  let codeMsgs = encode(msg);
   let hexMsg = '';
   let hexNumber = '';
   for(let m of codeMsgs){

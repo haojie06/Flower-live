@@ -1,7 +1,7 @@
 <view class="show">
 		<view class="showMsg">
 				<view class="title">
-						<text>{{msg.id}}.{{msg.name}}</text>
+						<text>{{msg.id}}.{{msg.name}}({{flower_msg[index].name}})</text>
 						<text class="afterTitle" style="display:block">更新时间:{{msg.updateTime}}</text>
 				</view>
 				<view>
@@ -27,11 +27,11 @@
 		<view class="showPic">
 				<view class="statusPanel"></view>
 				<view class="controlPanel">
-						<view class="control-btn water" bindtap="water" hover-class="hover">浇水</view>
+						<view class="control-btn water" bindtap="water" hover-class="hover" >浇水</view>
 						<view class="vertical-line"></view>
 						<view class="control-btn light" bindtap="light" hover-class="hover" style="color:{{lightColor}}">补光</view>
 				</view>
-				<image class="potPic" src="/images/{{autoPic}}.png" mode="aspectFill" bindtap="autoSet" data-msg="{{msg}}" />
+				<image class="potPic" src="/images/{{autoPic}}.png" mode="aspectFill" bindtap="autoSet" data-msg="{{msg}}" bindtouchstart="touchStart" bindtouchend="touchEnd" bindlongpress="flowerSet"/>
 		</view>
 		<scroll-view class="flower-list" scroll-y="true" scroll-with-animation="true" enable-back-to-top="true">
 				<view class="list-item" hover-class="none" hover-stop-propagation="false" wx:for="{{flower_pots}}" wx:for-item="pot" wx:for-index="index" wx:key="{{pot.id}}" data-pot="{{pot}}" bindtouchstart="touchStart" bind:tap="touchListItem" bindlongpress="touchDelete">
@@ -46,7 +46,7 @@
 		</scroll-view>
 		<button class="add-pot iconfont icon-huapen" bind:tap="addPot" />
 		<!-- 遮罩 -->
-		<view class="mask" wx:if="{{showModal||showAuto}}" />
+		<view class="mask" wx:if="{{showModal||showAuto||showFlower}}" />
 		<view class="potModal" wx:if="{{showModal}}">
 				<text class="modal-title">请输入花盆信息</text>
 				<form bindsubmit="submitModal">
@@ -85,7 +85,7 @@
     <view class="autoModal" wx:if="{{showAuto}}" >
             <view>
           <picker bindchange="flowerPick" mode="selector" range="{{flower_msg}}" value="{{index}}" range-key="{{'name'}}">
-            <text class="modal-title">选择花卉类型</text>
+            <text class="modal-title">选择/删除花卉类型</text>
             <view class="weui-cells weui-cells_after-title">
              <view class="weui-cell ">
                     <view class="weui-cell__hd">
@@ -107,8 +107,49 @@
           </picker>
         </view>
         <view class="modal-buttons">
-          <button class="weui-btn mini-btn" type="primary" size="mini" bind:tap="autoCancel">确定</button>
+          <button class="weui-btn mini-btn" type="primary" size="mini" bind:tap="autoCancel" >选择</button>
+          <button class="weui-btn mini-btn" type="default" size="mini" bind:tap="flowerDelete">删除</button>
         </view>
+    </view>
+
+    <view class="autoModal" wx:if="{{showFlower}}">
+      <text calss="modal-title-">设置特殊花卉</text>
+      <form bindsubmit="submitFlower">
+        <view class="weui-cells weui-cells_after-title">
+								<view class="weui-cell ">
+										<view class="weui-cell__hd">
+												<view class="weui-label">花卉名称</view>
+										</view>
+										<view class="weui-cell__bd">
+												<input class="weui-input" placeholder="请输入花卉名称" name="flowerName" />
+										</view>
+								</view>
+              <picker bindchange="waterSet" range="{{soilHumArr}}" value="{{soilIdx}}">
+                <view class="weui-cell ">
+										<view class="weui-cell__hd">
+												<view class="weui-label">土壤湿度</view>
+										</view>
+										<view class="weui-cell__bd">
+												{{soilHumArr[soilIdx]}}
+										</view>
+								</view>
+              </picker>
+              <picker bindchange="lightSet" range="{{lightArr}}" value="{{lightIdx}}">
+                <view class="weui-cell ">
+										<view class="weui-cell__hd">
+												<view class="weui-label">光照强度</view>
+										</view>
+										<view class="weui-cell__bd">
+												{{lightArr[lightIdx]}}
+										</view>
+								</view>
+              </picker>
+        </view>
+        <view class="modal-buttons">
+          <button class="weui-btn mini-btn" type="warn" size="mini" bind:tap="modalCancel">取消</button>
+          <button class="weui-btn mini-btn" type="primary" size="mini" form-type="submit">确定</button>
+        </view>
+      </form>
     </view>
 
 </view>

@@ -1,2 +1,36 @@
 <!--pages/comment/comment.wxml-->
-<text>pages/comment/comment.wxml</text>
+
+<view class="comment">
+  <view>
+    <swiper class="carousel" indicator-dots="true" indicator-color="#f4f4f4" indicator-active-color="#4eb8e8" autoplay="true" circular="true" duration="2000">
+      <block wx:for="{{list}}" wx:key="*this">
+        <swiper-item>
+          <image style="height:100%;width:100%;" src="/images/{{item}}.jpg" mode="scaleToFill"/>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+
+  <view class="title navigate">
+    <view hover-class="hover" bindtap="webSwitch">相关网站</view>
+    <view class="box"></view>
+    <view hover-class="hover" bindtap="knowSwitch">花卉知识</view>
+    <view class="box"></view>
+    <view hover-class="hover" bindtap="commentSwitch">论坛</view>
+  </view>
+
+  <view>
+    <scroll-view class="comment-list"scroll-y="true" scroll-with-animation="true" enable-back-to-top="true">
+      <view class="list-item" wx:for="{{show_list}}" wx:for-item="news" wx:for-index="index"  wx:key="{{news.image}}" data-web="{{news.url}}" bindtap="openTheWeb">
+        <view>
+          <image src="{{news.image}}" mode="aspectFit"/>
+          <text class="title" style="display:block">{{news.title}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!--<web-view  class="web" src="{{webUrl}}"></web-view>-->
+</view>
+
+

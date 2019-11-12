@@ -25,7 +25,7 @@
       },
       {
         "pagePath": "pages/comment/comment",
-        "text": "论坛",
+        "text": "资讯",
         "iconPath": "images/jurassic_bbs_1.png",
         "selectedIconPath": "images/jurassic_bbs.png"
       },
