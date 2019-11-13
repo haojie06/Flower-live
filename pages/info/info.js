@@ -1,18 +1,62 @@
 // pages/info/info.js
+
+const app = getApp();
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    hasUserInfo: false,
+    userInfo: {},
+    canIUse: wx.canIUse("button.open-type.getUserInfo"),
+    potNumber: 6,
+    flowerNumber: 3
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    if(app.globalData.userInfo)
+    {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true
+      });
+    }
+    else if(this.data.canIUse){
+      app.userInfoReadyCallBack = res =>{
+        if(res.userInfo)
+        this.setData({
+          userInfo: res.userInfo,
+          hasUserInfo: true
+        });
+      }
+    }
+    else {
+      // 在没有 open-type=getUserInfo 版本的兼容处理
+      wx.getUserInfo({
+        success: res => {
+          app.globalData.userInfo = res.userInfo
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true
+          })
+        }
+      })
+    }
+  },
 
+  getUserInfo: function(e){
+    console.log(e)
+    app.globalData.userInfo = e.detail.userInfo;
+    if(app.globalData.userInfo)
+    this.setData({
+      userInfo: app.globalData.userInfo,
+      hasUserInfo: true
+    })
   },
 
   /**
@@ -26,7 +70,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    //更新花盆和花卉数
+    if(app.globalData.potNumber != this.data.potNumber)
+    this.setData({potNumber: app.globalData.potNumber});
+    if(app.globalData.flowerNumber != this.data.flowerNumber)
+    this.setData({flowerNumber: app.globalData.flowerNumber});
   },
 
   /**
@@ -62,5 +110,14 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  getMember: function(){
+    wx.showModal({
+      title: '',
+      content: '活动尚未开展，敬请期待！',
+      cancelText: '好吧- -',
+      confirmText:"好哒！"
+    })
   }
 })

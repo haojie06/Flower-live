@@ -1,1 +1,103 @@
 /* pages/info/info.wxss */
+@import "/pages/weui.wxss";
+
+.userinfo-avatar {
+  width: 150rpx;
+  height: 150rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+  border: 10px soild rgba(252, 248, 226, 0.815);
+  margin-right: 7%;
+}
+
+.userinfo-nickname {
+  color: rgb(253, 253, 243);
+  text-align: center;
+  padding-right:30%;
+  font-weight: bold;
+}
+
+.userinfo-get
+{
+  border-radius: 50%;
+  width: 150rpx;
+  height:150rpx;
+}
+
+.userinfo-get image{
+  width:150rpx;
+  height:150rpx;
+  border-radius: 50%;
+  position: absolute;
+  right:0.4%;
+}
+
+.userinfo
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:100%;
+  height: 20%;
+  background: linear-gradient(white, rgb(255,204,0));
+}
+
+page{
+  width:100%;
+  height:100%;
+}
+
+.weui-media-box__hd {
+    margin-right: 16px;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+}
+
+.weui-media-box__bd {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    min-width: 0;
+}
+
+.weui-cell__ft.page_ft{
+  position: absolute;
+  bottom:0;
+  font-size:0.6rem;
+  width:100%;
+  text-align: center;
+}
+
+.cell{
+  display: flex;
+  width:100%;
+  height:15%;
+  justify-content: space-between;
+  margin-bottom: 5%;
+}
+
+.cell-bd{
+  background-color: white;
+  width:33%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-msg1{
+  font-size:140%;
+  font-weight:bold;
+}
+
+.text-msg2{
+  font-size:70%;
+}
+
+.panel{
+  background: url("https://cn.bing.com/th?id=OIP.-tOZekFoYUT3FxiRsOsY6gHaD9&pid=Api&rs=1");
+  margin-bottom:5%;
+}

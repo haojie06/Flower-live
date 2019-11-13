@@ -16,7 +16,7 @@
     <view class="box"></view>
     <view hover-class="hover" bindtap="knowSwitch">花卉知识</view>
     <view class="box"></view>
-    <view hover-class="hover" bindtap="commentSwitch">论坛</view>
+    <view hover-class="hover" bindtap="commentSwitch">灵魂问答</view>
   </view>
 
   <view>

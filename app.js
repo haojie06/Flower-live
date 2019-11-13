@@ -34,6 +34,8 @@ App({
     })
   },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    potNumber: 6,
+    flowerNumber: 3
   }
 })

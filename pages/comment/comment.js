@@ -1,6 +1,11 @@
 // pages/comment/comment.js
 var web_list =  [
   {
+    url: "",
+    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1573628506769&di=9ebc04e76cda40fa60c791f97ca3f1e7&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20151026%2Fmp37784391_1445848640592_30.jpeg",
+    title: "四川大学第十六届锦江电子杯电子设计大赛"
+  },
+  {
     url: "https://www.huahuier.com/",
     image: "https://cn.bing.com/th?id=OIP.iLKoBJ7svJIa39RTBlk49QHaE8&pid=Api&rs=1",
     title: "花卉百科（推荐!）"

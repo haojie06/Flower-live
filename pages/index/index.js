@@ -7,12 +7,15 @@ lastTapTime = 0;
 lastTapTimeoutFunc = null;
 
 const { encode, decode } = require('fast-gbk');
+const app = getApp();
+
 var enco = '03034570528203795997';
 var numList = encode(enco);
 var globalSocket = null;
 
 var water = true;
 var light = false;
+
 let that = this;
 Page({
 	/**
@@ -35,7 +38,8 @@ Page({
 			airHumidity: '0',
 			soilHumidity: '0',
 			light: '0',
-			updateTime: '2019-10-1 22:22:22'
+			updateTime: '2019-10-1 22:22:22',
+      rain: false
 		},
 		flower_pots: [
 			{
@@ -127,9 +131,13 @@ Page({
 			this.setData({
 				flower_pots: pots,
 			});
+      app.globalData.potNumber = pots.length;
 		}
     if(flowerMsg)
-      this.setData({flower_msg: flowerMsg});
+      {
+        this.setData({flower_msg: flowerMsg});
+        app.globalData.flowerNumber = flowerMsg.length;
+      }
 	},
 
 	/**
@@ -161,7 +169,7 @@ Page({
 			key: 'pots',
 			data: this.data.flower_pots
 		});
-    wx.setStorageSync('flowerMsg', flower_msg);
+    wx.setStorageSync('flowerMsg', this.data.flower_msg);
     console.log('Unload');
 	},
 
@@ -366,6 +374,7 @@ Page({
 				currentMsg.soilHumidity = msgObject.humidity;
         currentMsg.light = msgObject.light_intensity;
 				currentMsg.updateTime = date.toUTCString();
+        currentMsg.rain = msgObject.rain;
 				this.setData({
 					msg: currentMsg
 				});
@@ -405,6 +414,9 @@ Page({
 						title: '删除成功',
 						icon: 'success'
 					});
+
+          //花盆显示数-1
+          app.globalData.potNumber -= 1;
 				}
 			},
 			fail: function() {
@@ -468,6 +480,9 @@ Page({
         index: 0
 			};
 			pots.push(newPot);
+
+      //用于显示关于页面里面的花盆数+1
+      app.globalData.potNumber += 1;
 		}
 
 		this.setData({
@@ -520,7 +535,11 @@ Page({
         });
         //发送'a'+土壤湿度+光照强度
         sendData('a' + flower.soilHumidity.toString() + flower.light.toString());
-        console.log('a' + flower.soilHumidity.toString() + flower.light.toString())
+        console.log('a' + flower.soilHumidity.toString() + flower.light.toString());
+        that.setData({
+          lightColor: "black"
+        });
+        light = false;
       }
       else if(pic == 'auto_off')
       {
@@ -578,6 +597,9 @@ Page({
       flower_msg: flowerMsg,
       showFlower: false,
     });
+
+    //花卉种类 +1
+    app.globalData.flowerNumber += 1;
   },
 
   //花卉种类删除，如果没有花卉种类为空，则删除无效
@@ -607,7 +629,10 @@ Page({
           that.setData({
             index: 0,
             flower_msg: flowerMsg
-          })
+          });
+
+          //花卉种类数 -1
+          app.globalData.flowerNumber -= 1;
         }
       }
     })

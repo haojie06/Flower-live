@@ -1,7 +1,7 @@
 <view class="show">
 		<view class="showMsg">
 				<view class="title">
-						<text>{{msg.id}}.{{msg.name}}({{flower_msg[index].name}})</text>
+						<view>{{msg.id}}.{{msg.name}}({{flower_msg[index].name}})<image style="height:20px;width:20px;" wx:if="{{msg.rain}}" src="/images/rain.png"/></view>
 						<text class="afterTitle" style="display:block">更新时间:{{msg.updateTime}}</text>
 				</view>
 				<view>
