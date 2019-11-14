@@ -33,26 +33,45 @@
     </view>
   </view>
 
-<view class="weui-media-box weui-media-box_appmsg panel" hover-class="weui-cell_active" bindtap="getMember">
-    <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-        <image class="weui-media-box__thumb" src="/images/throne.png" />
-    </view>
-    <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-        <view class="weui-media-box__title" style="font-weight:bold">成为<text style="color:gold;font-size:120%">会员</text>·
-        解锁属于<text style="color:gold;font-size:120%">你的</text>花卉！</view>
-    </view>
-</view>
-
-  <view class="weui-cells weui-cells_after-title">
-      <view  class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-          <view class="weui-cell__bd">cell <text style="color:gold;font-weight:bold;font-size:1rem;">standard</text></view>
-          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+  <view class="weui-media-box weui-media-box_appmsg panel" hover-class="weui-cell_active" bindtap="getMember">
+      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <image class="weui-media-box__thumb" src="/images/throne.png" />
       </view>
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-          <view class="weui-cell__bd">cell standard</view>
-          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
+      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+          <view class="weui-media-box__title" style="font-weight:bold">成为<text style="color:gold;font-size:120%">会员</text>·
+          解锁属于<text style="color:gold;font-size:120%">你的</text>花卉！</view>
+      </view>
   </view>
 
-  <view class="weui-cell__ft page_ft">Creat By 锦电杯第61组</view>
+  <view class="weui-cells weui-cells_after-title">
+      <view  class="weui-cell weui-cell_access" style="opacity:{{showHelp? .4: 1}}" hover-class="weui-cell_active" bindtap="help">
+          <view class="weui-cell__bd">帮助</view>
+          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </view>
+      <view class="show-cell" wx:if="{{showHelp}}" wx:for="{{helpMsg}}">
+        <view class="weui-article__h3" style="background-color:#ededed;line-height:1.5em">{{item.title}}</view>
+        <image src="{{item.image}}" mode="scaleToFill"/>
+      </view>
+      <view class="weui-cell weui-cell_access" style="opacity:{{showAbout? .4: 1}}" hover-class="weui-cell_active" bindtap="about">
+          <view class="weui-cell__bd">关于我们</view>
+          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </view>
+      <view class="show-cell" wx:if="{{showAbout}}">
+        <view class="weui-article__h2">制作者：锦电杯第61组</view>
+        <view class="weui-article__h3">组员</view>
+        <view class="weui-article__p" style="font-size:85%" wx:for="{{teamMsg}}">
+          <text space="emsp" decode="true">{{item.level}}：{{item.name}}&emsp;</text>
+          <text style="display:block" space="nbsp" decode="true">学院：{{item.college}}&emsp;专业：{{item.subject}}</text>
+          <text style="display:block" space="nbsp" decode="true">学号：{{item.studentId}} &nbsp; 电话：{{item.phone}}</text>
+        </view>
+        <view class="weui-article__h3">指导老师</view>
+        <view class="weui-article__p" style="font-size:85%">孟庆党</view>
+      </view>
+  </view>
+
+  <view class="weui-cell__ft page_ft" style="bottom:{{showAbout||showHelp?auto: 0}}">
+  <text>copyright 2019 by 锦电杯第61组</text>
+  <text style="display:block">All Rights Reserved</text>
+  </view>
+
 </view>

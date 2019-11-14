@@ -585,7 +585,7 @@ Page({
 
     let newFlower = {
       id: flowerId,
-      name: e.detail.value.flowerName || 0,
+      name: e.detail.value.flowerName || '自定义',
       soilHumidity: soilHum,
       light: light,
       desc: "土壤湿度不低于: " + soilHum + " 光照强度不低于: " + light

@@ -12,7 +12,53 @@ Page({
     userInfo: {},
     canIUse: wx.canIUse("button.open-type.getUserInfo"),
     potNumber: 6,
-    flowerNumber: 3
+    flowerNumber: 3,
+    showAbout: false,
+    showHelp:false,
+    teamMsg:[
+      {
+        level: '队长',
+        name: '赵崇皓',
+        college: '电子信息学院',
+        subject: '电子信息工程(卓越班)',
+        studentId: '2017141451258',
+        phone: '15328219621'
+      },
+      {
+        level: '组员',
+        name: '朱奕霖',
+        college: '电子信息学院',
+        subject: '电子信息科学与技术',
+        studentId: '2017141451056',
+        phone: '13032893768'
+      },
+      {
+        level: '组员',
+        name: '赵庆',
+        college: '华西口腔医学院',
+        subject: '口腔医学(五年制)',
+        studentId: '2017151642127',
+        phone: '13060033978'
+      }
+    ],
+    helpMsg:[
+      {
+        title: '显示',
+        image: '/images/help1.png'
+      },
+      {
+        title: '控制花盆设备',
+        image: '/images/help2.png'
+      },
+      {
+        title: '添加和连接花盆设备',
+        image: '/images/help3.png'
+      },
+      {
+        title: '登录',
+        image: '/images/help4.png'
+      }
+    ]
   },
 
   /**
@@ -119,5 +165,13 @@ Page({
       cancelText: '好吧- -',
       confirmText:"好哒！"
     })
+  },
+
+  about: function(){
+    this.setData({showAbout: !this.data.showAbout});
+  },
+
+  help: function(){
+    this.setData({showHelp: !this.data.showHelp});
   }
 })

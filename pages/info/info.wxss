@@ -64,7 +64,6 @@ page{
 
 .weui-cell__ft.page_ft{
   position: absolute;
-  bottom:0;
   font-size:0.6rem;
   width:100%;
   text-align: center;
@@ -100,4 +99,15 @@ page{
 .panel{
   background: url("https://cn.bing.com/th?id=OIP.-tOZekFoYUT3FxiRsOsY6gHaD9&pid=Api&rs=1");
   margin-bottom:5%;
+}
+
+.show-cell{
+  padding-left: 16px;
+  padding-bottom: 10rpx;
+  /*transform:translateY(0);*/
+}
+
+.show-cell image{
+  height:140px;
+  width: 100%;
 }

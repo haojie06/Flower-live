@@ -16,7 +16,7 @@
 				<view class="line" />
 				<view>
 						<view class="line-font iconfont icon-taiyang" />
-						<view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}%</view>
+						<view class="showItem" id="soilHumidity">土壤湿度：{{msg.soilHumidity}}</view>
 				</view>
 				<view class="line" />
 				<view>
