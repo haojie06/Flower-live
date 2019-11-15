@@ -38,7 +38,7 @@ var flower_list = [
 var comment_list = [
   {
     url: "https://www.zhihu.com/question/41466375",
-    image: "http://images.china.cn/attachement/png/site1000/20140505/e89a8ffb139314d18bfa0b.png",
+    image: "https://cn.bing.com/th?id=OIP.OYTPBVbLv_vTu_CYtfqR4AHaHc&pid=Api&rs=1",
     title: "新手养花最容易犯哪些错误?应该如何避免?"
   }
 ]
@@ -49,7 +49,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    list:["flower1", "flower2", "flower3"],
+    list:["flower1", "flower4", "flower3"],
     show_list: []
   },
 

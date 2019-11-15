@@ -108,6 +108,6 @@ page{
 }
 
 .show-cell image{
-  height:140px;
+  height:160px;
   width: 100%;
 }
