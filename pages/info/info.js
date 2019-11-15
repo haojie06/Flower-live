@@ -15,6 +15,7 @@ Page({
     flowerNumber: 3,
     showAbout: false,
     showHelp:false,
+    showFlower: false,
     teamMsg:[
       {
         level: '队长',
@@ -58,7 +59,8 @@ Page({
         title: '登录',
         image: '/images/help4.png'
       }
-    ]
+    ],
+    flowerMsg:[]
   },
 
   /**
@@ -93,6 +95,10 @@ Page({
         }
       })
     }
+
+    this.setData({
+      flowerMsg: app.globalData.flowerMsg
+    })
   },
 
   getUserInfo: function(e){
@@ -116,11 +122,15 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    //更新花盆和花卉数
+    //更新花盆和花卉数,以及花卉种类信息
     if(app.globalData.potNumber != this.data.potNumber)
     this.setData({potNumber: app.globalData.potNumber});
     if(app.globalData.flowerNumber != this.data.flowerNumber)
     this.setData({flowerNumber: app.globalData.flowerNumber});
+
+    this.setData({
+      flowerMsg: app.globalData.flowerMsg
+    })
   },
 
   /**
@@ -173,5 +183,10 @@ Page({
 
   help: function(){
     this.setData({showHelp: !this.data.showHelp});
+  },
+
+  checkFlower: function(){
+    if(this.data.hasUserInfo)
+    this.setData({showFlower: !this.data.showFlower})
   }
 })

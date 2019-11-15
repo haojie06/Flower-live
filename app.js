@@ -36,6 +36,7 @@ App({
   globalData: {
     userInfo: null,
     potNumber: 6,
-    flowerNumber: 3
+    flowerNumber: 3,
+    flowerMsg:[]
   }
 })

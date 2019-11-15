@@ -111,3 +111,45 @@ page{
   height:160px;
   width: 100%;
 }
+
+.mask {
+  width: 100%;  
+  height: 100%;  
+  position: fixed;  
+  top: 0;  
+  left: 0;  
+  z-index: 1000;  
+  background: #000;  
+  opacity: 0.5;  
+  overflow: hidden;  
+}
+
+.flower-modal{
+  z-index: 1001;
+  position: fixed;
+  top:30%;
+  left:10%;
+  width:80%;
+  height:40%;
+  background-color:#ededed;
+  border-radius: 10%;
+  text-align: center;
+}
+
+.scroll-modal{
+  margin-left:5%;
+  width:90%;
+  height:60%;
+}
+
+.modal-buttons {
+  position: absolute;
+  bottom: 2px;
+  width: 100%;
+  text-align: center;
+}
+
+.show-list{
+  background-color: white;
+  border-bottom: 3px solid #ededed;
+}

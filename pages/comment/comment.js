@@ -38,7 +38,7 @@ var flower_list = [
 var comment_list = [
   {
     url: "https://www.zhihu.com/question/41466375",
-    image: "https://cn.bing.com/th?id=OIP.OYTPBVbLv_vTu_CYtfqR4AHaHc&pid=Api&rs=1",
+    image: "https://tse4-mm.cn.bing.net/th?id=OIP.8jw7e3DvdgmArWASh16MyAE-DE&w=298&h=179&c=7&o=5&dpr=1.25&pid=1.7",
     title: "新手养花最容易犯哪些错误?应该如何避免?"
   }
 ]

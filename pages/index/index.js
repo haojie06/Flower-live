@@ -138,6 +138,7 @@ Page({
         this.setData({flower_msg: flowerMsg});
         app.globalData.flowerNumber = flowerMsg.length;
       }
+    app.globalData.flowerMsg = this.data.flower_msg;
 	},
 
 	/**
@@ -158,6 +159,9 @@ Page({
    */
 	onHide: function() {
     console.log('Hide')
+    app.globalData.flowerMsg = this.data.flower_msg;
+    app.globalData.flowerNumber = this.data.flower_msg.length;
+    app.globalData.potNumber = this.data.flower_pots.length;
   },
 
 	/**
@@ -204,13 +208,6 @@ Page({
 						this.setData({
 							flower_pots: pots
 						});
-						/*wx.showToast({
-							title: '成功更新数据',
-							icon: 'Success',
-							image: '',
-							duration: 1500,
-							mask: false
-						});*/
 					} else {
             pots[index].status = "离线";
             pots[index].pot_status = "pot-status-offline";
